@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTPN IV - Aplikasi Arsip</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+    
+    <div class="flex h-screen overflow-hidden">
+        
+        <aside class="w-64 bg-gradient-to-b from-white to-blue-100 border-r shadow-lg flex flex-col items-center py-6 flex-shrink-0 z-20">
+            <div class="mb-10 text-green-600 font-bold text-2xl flex flex-col items-center">
+                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2l6 14H4l6-14z"></path></svg>
+                <span class="text-sm mt-1">PTPN4</span>
+            </div>
+
+            <div class="w-full px-4 space-y-3">
+                <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'bg-gradient-to-b from-green-500 to-green-700 shadow-inner ring-2 ring-green-300' : 'bg-gradient-to-b from-green-400 to-green-600 hover:opacity-90 shadow-md' }} block w-full text-center border-2 border-green-700 text-white font-bold py-2 rounded-md transition">
+                    Dashboard
+                </a>
+
+                <a href="{{ route('surat-masuk.index') }}" class="{{ request()->routeIs('surat-masuk.*') ? 'bg-gradient-to-b from-green-500 to-green-700 shadow-inner ring-2 ring-green-300' : 'bg-gradient-to-b from-green-400 to-green-600 hover:opacity-90 shadow-md' }} block w-full text-center border-2 border-green-700 text-white font-bold py-2 rounded-md transition">
+                    Surat Masuk
+                </a>
+
+                @if(auth()->check() && auth()->user()->role === 'krani')
+                    <a href="{{ route('disposisi.index') }}" class="{{ request()->routeIs('disposisi.*') ? 'bg-gradient-to-b from-green-500 to-green-700 shadow-inner ring-2 ring-green-300' : 'bg-gradient-to-b from-green-400 to-green-600 hover:opacity-90 shadow-md' }} block w-full text-center border-2 border-green-700 text-white font-bold py-2 rounded-md transition">
+                        Disposisi
+                    </a>
+                @endif
+
+                @if(auth()->check() && auth()->user()->role === 'admin')
+                    <a href="{{ route('riwayat-aksi.index') }}" class="{{ request()->routeIs('riwayat-aksi.*') ? 'bg-gradient-to-b from-green-500 to-green-700 shadow-inner ring-2 ring-green-300' : 'bg-gradient-to-b from-green-400 to-green-600 hover:opacity-90 shadow-md' }} block w-full text-center border-2 border-green-700 text-white font-bold py-2 rounded-md transition">
+                        Riwayat Aksi
+                    </a>
+                @endif
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+            
+            <header class="bg-white border-b px-6 py-3 flex justify-between items-center shadow-sm flex-shrink-0 z-10" x-data="realtimeClock()">
+                <div class="text-sm font-bold text-gray-700 tracking-wide" x-text="currentTime">
+                    Memuat waktu...
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold uppercase">
+                            {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
+                        </div>
+                        <span class="font-semibold text-sm">{{ Auth::user()->name ?? 'User' }}</span>
+                    </div>
+                </div>
+            </header>
+
+            @yield('content')
+            
+        </main>
+    </div>
+
+    @stack('modals')
+
+    <script>
+        function realtimeClock() {
+            return {
+                currentTime: '',
+                init() {
+                    this.updateTime();
+                    setInterval(() => this.updateTime(), 1000); 
+                },
+                updateTime() {
+                    const d = new Date();
+                    // Mengubah nama hari ke Bahasa Indonesia
+                    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                    // Mengubah nama bulan ke Bahasa Indonesia
+                    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                    
+                    let dayName = days[d.getDay()];
+                    let date = d.getDate().toString().padStart(2, '0');
+                    let monthName = months[d.getMonth()];
+                    let year = d.getFullYear();
+                    
+                    let h = d.getHours().toString().padStart(2, '0');
+                    let m = d.getMinutes().toString().padStart(2, '0');
+                    
+                    // Format hasil: Jumat, 10 Juli 2026 | 00:26 WIB
+                    this.currentTime = `${dayName}, ${date} ${monthName} ${year} | ${h}:${m} WIB`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
