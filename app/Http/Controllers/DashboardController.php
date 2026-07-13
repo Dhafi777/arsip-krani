@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+   public function index()
     {
         // 1. METRIK KOTAK ATAS
         $totalSurat = IncomingLetter::count();
@@ -32,21 +32,42 @@ class DashboardController extends Controller
             $chartBulan[] = $suratPerBulan[$i] ?? 0;
         }
 
-        // 4. GRAFIK PIE (TUJUAN SURAT)
-        // Catatan: Jika kolom tujuan di database Anda bernama lain (misal: 'tujuan_bagian'), ganti kata 'tujuan' di bawah ini
-        $tujuanSurat = IncomingLetter::selectRaw('tujuan, COUNT(*) as total')
-            ->whereNotNull('tujuan')
-            ->groupBy('tujuan')
-            ->pluck('total', 'tujuan')
+        // 4. GRAFIK PIE (JENIS SURAT: Internal vs Eksternal)
+        $jenisSurat = IncomingLetter::selectRaw('jenis_surat, COUNT(*) as total')
+            ->whereNotNull('jenis_surat')
+            ->groupBy('jenis_surat')
+            ->pluck('total', 'jenis_surat')
             ->toArray();
 
-        $labelTujuan = array_keys($tujuanSurat);
-        $dataTujuan = array_values($tujuanSurat);
+        $labelJenis = array_keys($jenisSurat);
+        $dataJenis = array_values($jenisSurat);
 
-        return view('dashboard.index', compact(
+        // 5. GRAFIK PIE (TUJUAN SURAT DARI TABEL DISPOSITIONS)
+        $tujuanSurat = \App\Models\Disposition::selectRaw('tujuan_head, COUNT(*) as total')
+            ->whereNotNull('tujuan_head')
+            ->groupBy('tujuan_head')
+            ->pluck('total', 'tujuan_head')
+            ->toArray();
+
+        // Mapping agar singkatan jadi lebih jelas di grafik
+        $namaTujuan = [
+            'RHE' => 'Region Head (RH)',
+            'OH' => 'Operation Head (OH)',
+            'BSH' => 'Business Support Head (BSH)'
+        ];
+
+        $labelTujuan = [];
+        $dataTujuan = [];
+        foreach ($tujuanSurat as $kode => $total) {
+            $labelTujuan[] = $namaTujuan[$kode] ?? $kode;
+            $dataTujuan[] = $total;
+        }
+
+        // KEMBALI KE FILE dashboard.blade.php DENGAN SEMUA VARIABEL
+        return view('dashboard', compact(
             'totalSurat', 'totalSuratHariIni', 
             'totalByElement', 'totalKeHead', 'totalKeBagian',
-            'chartBulan', 'labelTujuan', 'dataTujuan'
+            'chartBulan', 'labelJenis', 'dataJenis', 'labelTujuan', 'dataTujuan'
         ));
     }
 }

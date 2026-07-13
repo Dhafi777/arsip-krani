@@ -5,6 +5,7 @@ use App\Http\Controllers\IncomingLetterController;
 use App\Http\Controllers\DispositionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -12,9 +13,9 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Halaman Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+     Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
     // Routing untuk Surat Masuk (CRUD)
     Route::resource('surat-masuk', IncomingLetterController::class);
@@ -50,6 +51,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('riwayat-aksi.index');
 
     Route::get('/riwayat-aksi', [ActivityLogController::class, 'index'])->name('riwayat-aksi.index');
+
 
 });
 
