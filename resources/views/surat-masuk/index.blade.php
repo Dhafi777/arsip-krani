@@ -222,6 +222,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-4 px-2">
+            {{ $surat->links() }}
+        </div>
     </div>
 
 

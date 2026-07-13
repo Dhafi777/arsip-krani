@@ -12,8 +12,10 @@
         
         <aside class="w-64 bg-gradient-to-b from-white to-blue-100 border-r shadow-lg flex flex-col items-center py-6 flex-shrink-0 z-20">
             <div class="mb-10 text-green-600 font-bold text-2xl flex flex-col items-center">
-                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2l6 14H4l6-14z"></path></svg>
-                <span class="text-sm mt-1">PTPN4</span>
+                <!-- KODE BARU -->
+                <div class="flex justify-center items-center mb-8">
+                    <img src="{{ asset('images/logo-ptpn4.png') }}" alt="Logo PTPN IV" class="w-24 h-auto drop-shadow-md transition hover:scale-105 duration-300">
+                </div>
             </div>
 
             <div class="w-full px-4 space-y-3">
@@ -34,6 +36,12 @@
                 @if(auth()->check() && auth()->user()->role === 'admin')
                     <a href="{{ route('riwayat-aksi.index') }}" class="{{ request()->routeIs('riwayat-aksi.*') ? 'bg-gradient-to-b from-green-500 to-green-700 shadow-inner ring-2 ring-green-300' : 'bg-gradient-to-b from-green-400 to-green-600 hover:opacity-90 shadow-md' }} block w-full text-center border-2 border-green-700 text-white font-bold py-2 rounded-md transition">
                         Riwayat Aksi
+                    </a>
+                @endif
+
+                @if(auth()->check() && auth()->user()->role === 'admin')
+                    <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'bg-gradient-to-b from-green-500 to-green-700 shadow-inner ring-2 ring-green-300' : 'bg-gradient-to-b from-green-400 to-green-600 hover:opacity-90 shadow-md' }} block w-full text-center border-2 border-green-700 text-white font-bold py-2 rounded-md transition">
+                        Manajemen Krani
                     </a>
                 @endif
             </div>

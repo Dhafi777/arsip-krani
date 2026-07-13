@@ -131,6 +131,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-4 px-2">
+            {{ $surat->links() }}
+        </div>
 
         <!-- MODAL UBAH STATUS & UPLOAD -->
         <div x-show="activeModal === 'edit'" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;">

@@ -30,8 +30,8 @@ class DispositionController extends Controller
             $query->where('status_disposisi', $request->filter);
         }
 
-        // 4. Eksekusi query (urutkan yang terbaru, lalu ambil datanya)
-        $surat = $query->latest('tgl_masuk')->get();
+        // 4. Eksekusi query dengan paginasi
+        $surat = $query->latest('tgl_masuk')->paginate(15)->withQueryString();
 
         return view('disposisi.index', compact('surat'));
     }

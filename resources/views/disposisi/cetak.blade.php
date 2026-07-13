@@ -72,7 +72,7 @@
                     <div class="header-title">LEMBAR DISPOSISI</div>
                 </td>
                 <td style="width: 20%; text-align: center; vertical-align: middle;">
-                    <img src="{{ asset('img/logo-ptpn4.png') }}" alt="Logo PTPN4" style="height: 40px;">
+                    <img src="{{ asset('images/logo-ptpn4.png') }}" alt="Logo PTPN IV" style="width: 40px; height: auto;">
                 </td>
                 <td style="width: 45%; text-align: right; vertical-align: bottom; font-size: 8.5pt;">
                     Nomor Agenda Penerimaan : <strong>{{ $surat->no_agenda ?? '....' }}</strong>
@@ -163,7 +163,7 @@
 
         <table style="margin-top: 4px;">
             <tr>
-                <td style="text-align: center; height: 110px; vertical-align: top; padding-top: 4px;">
+                <td style="text-align: center; height: 100px; vertical-align: top; padding-top: 4px;">
                     Catatan
                 </td>
             </tr>

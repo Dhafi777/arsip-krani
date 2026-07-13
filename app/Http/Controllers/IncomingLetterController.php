@@ -37,7 +37,8 @@ class IncomingLetterController extends Controller
         }
 
         // Eksekusi Query
-        $surat = $query->get();
+        // Eksekusi Query dengan Paginasi (15 baris per halaman)
+        $surat = $query->paginate(15)->withQueryString();
 
         // Logika Generate No. Agenda Otomatis (001 - 999) tetap dipertahankan
         $lastSurat = IncomingLetter::orderBy('id', 'desc')->first();

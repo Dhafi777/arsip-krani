@@ -6,6 +6,7 @@ use App\Http\Controllers\DispositionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -52,7 +53,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/riwayat-aksi', [ActivityLogController::class, 'index'])->name('riwayat-aksi.index');
 
-
+    // Rute Manajemen Karyawan (Khusus Admin)
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::put('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';
