@@ -44,29 +44,34 @@
             </div>
             
             <form action="{{ route('disposisi.index') }}" method="GET" class="flex space-x-3 items-center">
-                <!-- Dropdown Filter -->
-                <select name="filter" onchange="this.form.submit()" class="border-gray-300 rounded shadow-sm text-sm bg-blue-100 font-semibold focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Semua Status</option>
-                    <option value="By Element" {{ request('filter') == 'By Element' ? 'selected' : '' }}>By Element</option>
-                    <option value="Diserahkan ke Head" {{ request('filter') == 'Diserahkan ke Head' ? 'selected' : '' }}>Diserahkan ke Head</option>
-                    <option value="Diteruskan ke Bagian" {{ request('filter') == 'Diteruskan ke Bagian' ? 'selected' : '' }}>Diteruskan ke Bagian</option>
-                </select>
+    
+            <select name="sort" onchange="this.form.submit()" class="border-gray-300 rounded shadow-sm text-sm bg-white font-semibold focus:ring-blue-500 focus:border-blue-500 text-gray-700">
+                <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Input Terbaru</option>
+                <option value="terlama" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Input Terlama</option>
+                <option value="tgl_surat_baru" {{ request('sort') == 'tgl_surat_baru' ? 'selected' : '' }}>Tgl. Surat Terbaru</option>
+                <option value="tgl_surat_lama" {{ request('sort') == 'tgl_surat_lama' ? 'selected' : '' }}>Tgl. Surat Terlama</option>
+            </select>
 
-                <!-- Input Pencarian -->
-                <div class="relative">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Surat..." class="border-gray-300 rounded shadow-sm text-sm w-48 bg-blue-100 placeholder-gray-500 font-semibold focus:ring-blue-500 pr-8">
-                    <button type="submit" class="absolute right-2 top-2 text-gray-500 hover:text-blue-700">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </button>
-                </div>
+            <select name="filter" onchange="this.form.submit()" class="border-gray-300 rounded shadow-sm text-sm bg-blue-100 font-semibold focus:ring-blue-500 focus:border-blue-500 text-blue-900">
+                <option value="">Semua Status</option>
+                <option value="By Element" {{ request('filter') == 'By Element' ? 'selected' : '' }}>By Element</option>
+                <option value="Diserahkan ke Head" {{ request('filter') == 'Diserahkan ke Head' ? 'selected' : '' }}>Diserahkan ke Head</option>
+                <option value="Diteruskan ke Bagian" {{ request('filter') == 'Diteruskan ke Bagian' ? 'selected' : '' }}>Diteruskan ke Bagian</option>
+            </select>
 
-                <!-- Tombol Reset (Hanya muncul jika sedang melakukan filter/pencarian) -->
-                @if(request('filter') || request('search'))
-                    <a href="{{ route('disposisi.index') }}" class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-3 rounded shadow-sm font-bold transition">
-                        Reset
-                    </a>
-                @endif
-            </form>
+            <div class="relative">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Surat..." class="border-gray-300 rounded shadow-sm text-sm w-48 bg-blue-100 placeholder-gray-500 font-semibold focus:ring-blue-500 pr-8">
+                <button type="submit" class="absolute right-2 top-2 text-gray-500 hover:text-blue-700">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
+            </div>
+
+            @if(request('filter') || request('search') || (request('sort') && request('sort') != 'terbaru'))
+                <a href="{{ route('disposisi.index') }}" class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-3 rounded shadow-sm font-bold transition">
+                    Reset
+                </a>
+            @endif
+        </form>
         </div>
 
         <!-- TABEL -->

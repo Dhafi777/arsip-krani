@@ -30,6 +30,23 @@ class DispositionController extends Controller
             $query->where('status_disposisi', $request->filter);
         }
 
+        // 3. Jika ada request filter dari dropdown (Status Disposisi)
+        if ($request->filled('filter')) {
+            $query->where('status_disposisi', $request->filter);
+        }
+
+        // ================= KODE BARU: FITUR SORTIR =================
+        if ($request->sort === 'terlama') {
+            $query->oldest('created_at'); // Paling lama diinput
+        } elseif ($request->sort === 'tgl_surat_baru') {
+            $query->orderBy('tgl_surat', 'desc'); // Tgl. Surat paling baru
+        } elseif ($request->sort === 'tgl_surat_lama') {
+            $query->orderBy('tgl_surat', 'asc'); // Tgl. Surat paling lama
+        } else {
+            // DEFAULT: Mutlak paling atas adalah yang baru saja diketik/diinput detik ini juga
+            $query->latest('created_at'); 
+        }
+
         // 4. Eksekusi query dengan paginasi
         $surat = $query->latest('tgl_masuk')->paginate(15)->withQueryString();
 

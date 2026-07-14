@@ -141,5 +141,16 @@
             </form>
         </div>
     </div>
+    @if ($errors->any())
+        <div x-data="{ show: true }" x-show="show" class="fixed top-5 right-5 z-50 bg-red-600 text-white px-6 py-4 rounded shadow-2xl border-l-4 border-red-900">
+            <button @click="show = false" class="absolute top-1 right-2 text-white font-bold">&times;</button>
+            <p class="font-extrabold mb-1">Pendaftaran Gagal:</p>
+            <ul class="list-disc pl-4 text-sm font-bold">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 </div>
 @endsection
