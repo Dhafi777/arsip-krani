@@ -19,12 +19,11 @@
                 <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 border border-gray-200 rounded mb-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500">No. Agenda (Terkunci)</label>
-                        <p class="font-bold text-lg">{{ $surat->no_agenda }}</p>
-                    </div>
+                        <input type="text" value="{{ $s->id }}" readonly class="bg-gray-100 cursor-not-allowed ...">
                     <div>
                         <label class="block text-xs font-bold text-gray-500">Tanggal Masuk (Terkunci)</label>
                         <!-- KODE BARU UNTUK INPUT TANGGAL MASUK -->
-                        <input type="date" name="tgl_masuk" value="{{ \Carbon\Carbon::parse($surat->tgl_masuk)->format('Y-m-d') }}" readonly class="bg-gray-100 cursor-not-allowed ...">
+                       <input type="date" name="tgl_masuk" value="{{ $s->tgl_masuk ? \Carbon\Carbon::parse($s->tgl_masuk)->format('Y-m-d') : '' }}" readonly class="bg-gray-100 cursor-not-allowed ...">
                     </div>
                 </div>
 
@@ -32,7 +31,7 @@
                     <div>
                         <label class="block text-sm font-bold text-black mb-1">Tanggal Surat <span class="text-red-500">*</span></label>
                         <!-- KODE BARU UNTUK INPUT TANGGAL SURAT -->
-                        <input type="date" name="tgl_surat" value="{{ \Carbon\Carbon::parse($surat->tgl_surat)->format('Y-m-d') }}" class="...">
+                        <input type="date" name="tgl_surat" value="{{ $s->tgl_surat ? \Carbon\Carbon::parse($s->tgl_surat)->format('Y-m-d') : '' }}" class="...">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-black mb-1">Nomor Surat <span class="text-red-500">*</span></label>
