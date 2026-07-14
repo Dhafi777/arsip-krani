@@ -63,11 +63,36 @@ class DashboardController extends Controller
             $dataTujuan[] = $total;
         }
 
-        // KEMBALI KE FILE dashboard.blade.php DENGAN SEMUA VARIABEL
+        // 3.5 GRAFIK BATANG (HARIAN: SENIN - JUMAT MINGGU INI)
+        // Kunci tanggal dari Senin sampai Jumat minggu berjalan berdasarkan tgl_masuk
+        $startOfWeek = \Carbon\Carbon::now()->startOfWeek(\Carbon\Carbon::MONDAY);
+        $endOfWeek = $startOfWeek->copy()->addDays(4); // Senin + 4 hari = Jumat
+
+        $suratHarian = IncomingLetter::selectRaw('DATE(tgl_masuk) as tanggal, COUNT(*) as total')
+            ->whereBetween('tgl_masuk', [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')])
+            ->groupBy('tanggal')
+            ->pluck('total', 'tanggal')
+            ->toArray();
+
+        $labelHarian = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+        $chartHarian = [];
+        
+        // Memastikan array berurutan dari Senin s/d Jumat (indeks 0 - 4)
+        for ($i = 0; $i < 5; $i++) {
+            $tgl = $startOfWeek->copy()->addDays($i)->format('Y-m-d');
+            $chartHarian[] = $suratHarian[$tgl] ?? 0;
+        }
+        // ======================================================
+
+        // 4. GRAFIK PIE (JENIS SURAT: Internal vs Eksternal)
+        // ... kode jenis surat ...
+
+        // KEMBALI KE FILE dashboard.blade.php DENGAN TAMBAHAN VARIABEL BARU
         return view('dashboard', compact(
             'totalSurat', 'totalSuratHariIni', 
             'totalByElement', 'totalKeHead', 'totalKeBagian',
-            'chartBulan', 'labelJenis', 'dataJenis', 'labelTujuan', 'dataTujuan'
+            'chartBulan', 'labelHarian', 'chartHarian', // <-- Tambahkan labelHarian & chartHarian
+            'labelJenis', 'dataJenis', 'labelTujuan', 'dataTujuan'
         ));
     }
 }

@@ -33,10 +33,24 @@
     <!-- BARIS 2: GRAFIK OVERVIEW & STATISTIK DISPOSISI -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <!-- Grafik Batang Kiri (Market Overview Style) -->
+        <!-- Grafik Batang Kiri (Market Overview Style) -->
         <div class="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6 border border-gray-50 lg:col-span-2">
-            <h2 class="text-lg font-extrabold text-gray-800 mb-4">Statistik Surat Masuk 2026</h2>
-            <div class="w-full h-72">
-                <canvas id="barBulan"></canvas>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Grafik Harian -->
+                <div>
+                    <h2 class="text-lg font-extrabold text-gray-800 mb-4">Surat Masuk Minggu Ini</h2>
+                    <div class="w-full h-72">
+                        <canvas id="barHari"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Grafik Bulanan -->
+                <div>
+                    <h2 class="text-lg font-extrabold text-gray-800 mb-4">Statistik Bulanan</h2>
+                    <div class="w-full h-72">
+                        <canvas id="barBulan"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -106,6 +120,42 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 1. Grafik Batang (Surat per Bulan)
     const ctxBulan = document.getElementById('barBulan').getContext('2d');
+
+    // Grafik Batang (Surat per Hari - Minggu Ini)
+    const ctxHari = document.getElementById('barHari').getContext('2d');
+    
+    // Gradient Biru
+    let gradientHari = ctxHari.createLinearGradient(0, 0, 0, 400);
+    gradientHari.addColorStop(0, 'rgba(59, 130, 246, 0.8)'); 
+    gradientHari.addColorStop(1, 'rgba(59, 130, 246, 0.2)');
+
+    new Chart(ctxHari, {
+        type: 'bar',
+        data: {
+            labels: @json($labelHarian),
+            datasets: [{
+                label: 'Total Surat',
+                data: @json($chartHarian),
+                backgroundColor: gradientHari,
+                borderRadius: 6,
+                borderSkipped: false,
+                barThickness: 25
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { 
+                    beginAtZero: true, 
+                    ticks: { stepSize: 1 }, // Pastikan angkanya bulat
+                    grid: { borderDash: [5, 5], color: '#f3f4f6' } 
+                },
+                x: { grid: { display: false } }
+            }
+        }
+    });
     
     // Membuat gradient gaya crypto untuk bar chart
     let gradientBar = ctxBulan.createLinearGradient(0, 0, 0, 400);

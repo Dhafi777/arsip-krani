@@ -135,30 +135,37 @@
         </form>
 
         <div class="bg-white rounded-lg shadow border border-gray-200 flex-1 overflow-y-auto">
-            <table class="min-w-full text-sm">
-                <thead class="bg-white sticky top-0 z-10 border-b-2 border-black text-black shadow-sm">
-                    <tr>
-                        <th class="px-4 py-3 text-left font-bold">Nomor Surat</th>
-                        <th class="px-4 py-3 text-left font-bold">Tgl. Masuk</th>
-                        <th class="px-4 py-3 text-left font-bold">Tgl. Surat</th>
-                        <th class="px-4 py-3 text-left font-bold">Pengirim</th>
-                        <th class="px-4 py-3 text-left font-bold w-1/4">Perihal</th>
-                        <th class="px-4 py-3 text-left font-bold">Jenis Surat</th>
-                        <th class="px-4 py-3 text-left font-bold">Tujuan Surat</th>
-                        <th class="px-4 py-3 text-left font-bold">File Surat</th>
-                        <th class="px-4 py-3 text-left">Status</th>
-                        <th class="px-4 py-3 text-left">Catatan Admin</th>
-                        <th class="px-4 py-3 text-center font-bold">Aksi</th>
-                    </tr>
-                </thead>
+            <<table class="min-w-full text-sm text-left align-top">
+               <thead class="bg-gray-200 sticky top-0 z-10 border-b-2 border-black text-black">
+                <tr>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Nomor Surat</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Tgl. Masuk</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Tgl. Surat</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Pengirim</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Perihal</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Jenis Surat</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Tujuan Surat</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">File Surat</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Status</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Catatan Admin</th>
+                    <th class="px-4 py-3 uppercase tracking-wide font-extrabold">Aksi</th>
+                </tr>
+            </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($surat as $index => $s)
                     <tr class="{{ $index % 2 == 0 ? 'bg-blue-50' : 'bg-white' }} hover:bg-gray-100 transition">
-                        <td class="px-4 py-3 font-semibold">{{ $s->no_surat }}</td>
+                        <td class="px-4 py-3 align-top font-bold text-gray-800"> {{ $s->no_surat }}</td>
                         <td class="px-4 py-3">{{ \Carbon\Carbon::parse($s->tgl_masuk)->translatedFormat('d F Y') }}</td>
                         <td class="px-4 py-3">{{ \Carbon\Carbon::parse($s->tgl_surat)->translatedFormat('d F Y') }}</td>
-                        <td class="px-4 py-3 font-bold">{{ strtoupper($s->pengirim) }}</td>
-                        <td class="px-4 py-3 text-xs">{{ $s->perihal }}</td>
+                        <!-- Kolom Pengirim -->
+                        <td class="px-4 py-3 align-top font-semibold text-gray-900 max-w-[200px] break-words">
+                            {{ $s->pengirim }}
+                        </td>
+
+                        <!-- Kolom Perihal -->
+                        <td class="px-4 py-3 align-top text-gray-800">
+                            {{ $s->perihal }}
+                        </td>
                         <td class="px-4 py-3">{{ ucfirst($s->jenis_surat) }}</td>
                         <td class="px-4 py-3">
                             @if($s->disposition)
