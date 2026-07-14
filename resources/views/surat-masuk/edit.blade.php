@@ -23,14 +23,16 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500">Tanggal Masuk (Terkunci)</label>
-                        <p class="font-bold text-lg">{{ \Carbon\Carbon::parse($surat->tgl_masuk)->translatedFormat('d F Y') }}</p>
+                        <!-- KODE BARU UNTUK INPUT TANGGAL MASUK -->
+                        <input type="date" name="tgl_masuk" value="{{ \Carbon\Carbon::parse($surat->tgl_masuk)->format('Y-m-d') }}" readonly class="bg-gray-100 cursor-not-allowed ...">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-black mb-1">Tanggal Surat <span class="text-red-500">*</span></label>
-                        <input type="date" name="tgl_surat" value="{{ $surat->tgl_surat }}" required class="w-full border-black border-2 p-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <!-- KODE BARU UNTUK INPUT TANGGAL SURAT -->
+                        <input type="date" name="tgl_surat" value="{{ \Carbon\Carbon::parse($surat->tgl_surat)->format('Y-m-d') }}" class="...">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-black mb-1">Nomor Surat <span class="text-red-500">*</span></label>

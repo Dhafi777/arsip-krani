@@ -29,11 +29,16 @@ class IncomingLetterController extends Controller
             $query->where('jenis_surat', $request->filter_jenis);
         }
 
-        // 4. Fitur Urutkan (Berdasarkan Tanggal Masuk Terlama/Terbaru)
-        if ($request->filled('sort_by') && $request->sort_by == 'terlama') {
-            $query->oldest('tgl_masuk');
+        // 4. Fitur Urutkan
+        if ($request->sort_by === 'terlama') {
+            $query->oldest('created_at'); // Input terlama
+        } elseif ($request->sort_by === 'tgl_surat_baru') {
+            $query->orderBy('tgl_surat', 'desc'); // Tgl. Surat terbaru
+        } elseif ($request->sort_by === 'tgl_surat_lama') {
+            $query->orderBy('tgl_surat', 'asc'); // Tgl. Surat terlama
         } else {
-            $query->latest('tgl_masuk'); // Default: Terbaru
+            // DEFAULT: Mutlak input terbaru (berdasarkan detik/waktu input)
+            $query->latest('created_at'); 
         }
 
         // Eksekusi Query

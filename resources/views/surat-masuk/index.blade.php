@@ -118,8 +118,10 @@
                 <option value="eksternal" {{ request('filter_jenis') == 'eksternal' ? 'selected' : '' }}>Eksternal</option>
             </select>
             <select name="sort_by" onchange="this.form.submit()" class="border-gray-300 rounded shadow-sm text-sm font-semibold bg-gray-200 focus:ring-blue-500 focus:border-blue-500">
-                <option value="terbaru" {{ request('sort_by') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-                <option value="terlama" {{ request('sort_by') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                <option value="terbaru" {{ request('sort_by') == 'terbaru' ? 'selected' : '' }}>Input Terbaru</option>
+                <option value="terlama" {{ request('sort_by') == 'terlama' ? 'selected' : '' }}>Input Terlama</option>
+                <option value="tgl_surat_baru" {{ request('sort_by') == 'tgl_surat_baru' ? 'selected' : '' }}>Tgl. Surat Terbaru</option>
+                <option value="tgl_surat_lama" {{ request('sort_by') == 'tgl_surat_lama' ? 'selected' : '' }}>Tgl. Surat Terlama</option>
             </select>
             <div class="relative">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Surat/Pengirim..." class="border-gray-300 rounded shadow-sm text-sm w-64 bg-blue-100 placeholder-gray-500 focus:ring-blue-500 pr-8">

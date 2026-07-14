@@ -36,9 +36,9 @@
                     <td class="py-3 px-4 text-center">
                         @php
                             $badgeColor = match($log->action) {
-                                'Tambah Surat Masuk' => 'bg-green-100 text-green-700 border border-green-300',
-                                'Edit Surat Masuk' => 'bg-blue-100 text-blue-700 border border-blue-300',
-                                'Hapus Surat Masuk' => 'bg-red-100 text-red-700 border border-red-300',
+                                'Tambah Surat Masuk', 'Tambah Krani' => 'bg-green-100 text-green-700 border border-green-300',
+                                'Edit Surat Masuk', 'Update Disposisi', 'Reset Password' => 'bg-blue-100 text-blue-700 border border-blue-300',
+                                'Hapus Surat Masuk', 'Hapus Krani' => 'bg-red-100 text-red-700 border border-red-300',
                                 'Catatan Admin' => 'bg-yellow-100 text-yellow-700 border border-yellow-300',
                                 default => 'bg-gray-100 text-gray-700 border border-gray-300'
                             };
