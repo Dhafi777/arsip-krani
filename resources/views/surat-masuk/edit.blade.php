@@ -18,10 +18,10 @@
                 
                 <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 border border-gray-200 rounded mb-4">
                     <div>
-                        <label class="block text-xs font-bold text-gray-500">No. Agenda (Terkunci)</label>
+                        <label class="block text-xs font-bold text-gray-500">No. Agenda</label>
                         <input type="text" value="{{ $s->id }}" readonly class="bg-gray-100 cursor-not-allowed ...">
                     <div>
-                        <label class="block text-xs font-bold text-gray-500">Tanggal Masuk (Terkunci)</label>
+                        <label class="block text-xs font-bold text-gray-500">Tanggal Masuk</label>
                         <!-- KODE BARU UNTUK INPUT TANGGAL MASUK -->
                        <input type="date" name="tgl_masuk" value="{{ $s->tgl_masuk ? \Carbon\Carbon::parse($s->tgl_masuk)->format('Y-m-d') : '' }}" readonly class="bg-gray-100 cursor-not-allowed ...">
                     </div>
