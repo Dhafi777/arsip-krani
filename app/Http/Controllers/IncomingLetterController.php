@@ -45,14 +45,21 @@ class IncomingLetterController extends Controller
         // Eksekusi Query dengan Paginasi (15 baris per halaman)
         $surat = $query->paginate(15)->withQueryString();
 
-        // Logika Generate No. Agenda Otomatis (001 - 999) tetap dipertahankan
-        $lastSurat = IncomingLetter::orderBy('id', 'desc')->first();
-        if (!$lastSurat) {
-            $nextAgenda = '001';
-        } else {
-            $lastNumber = (int) $lastSurat->no_agenda;
-            $nextAgenda = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+       // 1. Tarik semua nomor agenda yang sedang AKTIF, lalu ubah jadi deretan angka murni
+        $agendaAktif = \App\Models\IncomingLetter::pluck('no_agenda')->map(function ($item) {
+            return (int) $item;
+        })->toArray();
+
+        // 2. Logika "Pencari Celah" (Gap Finder)
+        // Mulai menghitung dari angka 1. Jika angka tersebut sudah ada di array, lanjut ke angka berikutnya.
+        // Jika angka tersebut tidak ada (bolong), maka AMBIL angka tersebut!
+        $nextNumber = 1;
+        while (in_array($nextNumber, $agendaAktif)) {
+            $nextNumber++;
         }
+
+        // 3. Format kembali menjadi 3 digit (contoh: 001, 005)
+        $nextAgenda = str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
 
         return view('surat-masuk.index', compact('surat', 'nextAgenda'));
     }
@@ -67,7 +74,7 @@ class IncomingLetterController extends Controller
    public function store(Request $request)
     {
         $request->validate([
-            'no_agenda' => 'required|unique:incoming_letters,no_agenda',
+            'no_agenda' => 'required|unique:incoming_letters,no_agenda,NULL,id,deleted_at,NULL',
             'no_surat' => 'required|string|max:255',
             'tgl_surat' => 'required|date',
             'tgl_masuk' => 'required|date',
@@ -174,24 +181,29 @@ class IncomingLetterController extends Controller
         }
         return redirect()->route('surat-masuk.index')->with('success', 'Data Surat Masuk berhasil diperbarui!');
     }
-    public function destroy($id)
+   public function destroy($id)
     {
-        $surat = IncomingLetter::findOrFail($id);
+        $surat = \App\Models\IncomingLetter::findOrFail($id);
         
-        // Hapus file fisik PDF dari storage jika ada
-        if ($surat->file_surat) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($surat->file_surat);
-        }
-        
-        ActivityLog::create([
-            'user_id' => Auth::id(),
-            'action' => 'Hapus Surat Masuk',
-            'description' => Auth::user()->name . ' menghapus surat dari ' . $surat->pengirim . ' (Perihal: ' . $surat->perihal . ')'
+        $no_surat = $surat->no_surat;
+
+        // 1. CABUT NOMOR AGENDA (KUNCI UTAMANYA DI SINI)
+        // Kita ubah '001' menjadi '001-BATAL-17' (17 adalah ID data tersebut)
+        // Dengan ini, database akan melihat bahwa nomor '001' sudah kosong dan bisa dipakai surat baru.
+        $surat->no_agenda = $surat->no_agenda . '-BATAL-' . $surat->id;
+        $surat->save();
+
+        // 2. Setelah nomor dicabut, baru kita buang ke tong sampah (SoftDelete)
+        $surat->delete();
+
+        // 3. Catat di log
+        \App\Models\ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'Hapus Surat',
+            'description' => auth()->user()->name . ' menghapus surat masuk nomor ' . $no_surat
         ]);
 
-        $surat->delete(); // Ini otomatis akan menghapus data disposisinya juga karena kita set onDelete('cascade') di migration
-
-        return redirect()->back()->with('success', 'Surat Masuk berhasil dihapus permanen!');
+        return redirect()->back()->with('success', 'Surat berhasil dihapus dan Nomor Agenda telah dikembalikan untuk dipakai ulang!');
     }
 
     public function updateCatatan(Request $request, $id)
